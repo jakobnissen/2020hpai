@@ -68,7 +68,8 @@ end
 
 # Add the Guangdong one
 # A/Goose/Guangdong/1/96 |  PB2 | A / H5N1 | 1996-01-01 | EPI_ISL_1254 | A/Goose/Guangdong/1/96 | 5779
-open(FASTA.Reader, "ref/set3/guangdong.fna") do reader
+open("ref/set3/guangdong.fna.gz") do file
+    reader = FASTA.Reader(GzipDecompressorStream(file))
     for record in reader
         header = getheader(record)
         header_regex = r"^(A/[^\|]+)\|  ([\d\w]+) \|"

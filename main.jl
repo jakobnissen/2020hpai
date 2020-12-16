@@ -19,7 +19,8 @@ println("Completed step 1 - Move input")
 
 ## Step 2: QC reads - look at these reports manually.
 include("scripts/02_read_qc.jl")
-basenames = readdir("results/fastqc")
+#basenames = readdir("results/fastqc")
+basenames = collect(Set([rsplit(i, '_', limit=2)[1] for i in readdir("results/aln/set1")]))
 println("Completed step 2 - QC reads")
 
 ## Step 3: Split ref by segment

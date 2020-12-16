@@ -68,7 +68,8 @@ maybedir("results/translated/set1")
 
 refseqs = Dict()
 for segment in SEGMENTS
-    open(FASTA.Reader, "ref/relative.fna") do reader
+    open("ref/relative.fna") do file
+        reader = FASTA.Reader(GzipDecompressorStream(file))
         for record in reader
             refseqs[FASTA.identifier(record)] = FASTA.sequence(LongDNASeq, record)
         end

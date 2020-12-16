@@ -1,4 +1,4 @@
-mkdir("results/raw_reads")
+maybedir("results/raw_reads")
 fastq_regex = r"S-(.*)_L001_R[12]_001.fastq.gz"
 
 # We just put all the samples together as one

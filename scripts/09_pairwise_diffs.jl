@@ -37,7 +37,7 @@ for included in [true, false]
     println("")
 
     # Also for AAs
-    println("Amino acid - discount NA if H5N5 is present")
+    println("Amino acid")
     for gene in GENES
         seqs = []
         for basename in basenames

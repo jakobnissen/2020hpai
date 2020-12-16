@@ -21,7 +21,8 @@ function extract_sequence_data(record::FASTA.Record)
 end
 
 # Split by segment and rename
-bysegment = open(FASTA.Reader, "ref/set1/set1.fna") do reader
+bysegment = open("ref/set1/set1.fna.gz") do file
+    reader = FASTA.Reader(GzipDecompressorStream(file))
     bysegment = Dict()
     for record in reader
         identifier, segment, htype, ntype = extract_header_data(record)

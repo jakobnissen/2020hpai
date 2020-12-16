@@ -7,7 +7,8 @@ for segment in TREE_SEGMENTS
 end
 
 # Then add set2
-bysegment = open(FASTA.Reader, "ref/set2/ref.fna") do reader
+bysegment = open(F"ref/set2/ref.fna.gz") do file
+    reader = FASTA.Reader(GzipDecompressorStream(file))
     records = Dict(s => FASTA.Record[] for s in TREE_SEGMENTS)
     for record in reader
         identifier, segment, htype, ntype = extract_header_data(record)
@@ -21,7 +22,8 @@ end
 
 # And N5
 n5_header_regex = r"^(A/[^\|]+)\|A_/_(H\d+N5)\|NA\|.+"
-open(FASTA.Reader, "ref/set2/n5.fna") do reader
+open(FASTA.Reader, "ref/set2/n5.fna.gz") do file
+    reader = FASTA.Reader(GzipDecompressorStream(file))
     for record in reader
         header = String(record.data[first(record.identifier):max(last(record.identifier), last(record.description))])
         m = match(n5_header_regex, header)
