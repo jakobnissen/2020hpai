@@ -29,6 +29,9 @@ for segment in SEGMENTS
     end
 end
 
+@assert !isempty(ref_dict)
+@assert !isempty(own_dict)
+
 # Now compare!
 println("Differences from uploaded consensus")
 model = AffineGapScoreModel(match=1, mismatch=-2, gap_open=-5, gap_extend=-1) # same as KMA
@@ -39,5 +42,32 @@ for segment in SEGMENTS
 
         aln = alignment(pairalign(GlobalAlignment(), seq_a, seq_b, model))
         println(count_mismatches(aln), " ", segment, " ", sample)
+    end
+end
+
+# Now create a consensus where the duplicated ones are the reference onces
+maybedir("results/consensus/consensus")
+for basename in basenames
+    for segment in SEGMENTS
+        record, _ = open(iterate, FASTA.Reader, "results/consensus/set1/$(basename)_$(segment).fna")
+        header = getheader(record)
+        open(FASTA.Writer, "results/consensus/consensus/$(basename)_$(segment).fna") do writer
+            if in(header, duplicates)
+                println("Copied $basename $segment from reference")
+                write(writer, FASTA.Record(header, ref_dict[segment][header]))
+            else
+                write(writer, record)
+            end
+        end
+    end
+end
+
+# Cat together
+for segment in SEGMENTS
+    open(FASTA.Writer, "results/consensus/consensus/$segment.fna") do writer
+        for basename in basenames
+            record, _ = open(iterate, FASTA.Reader, "results/consensus/consensus/$(basename)_$segment.fna")
+            write(writer, record)
+        end
     end
 end

@@ -1,4 +1,4 @@
-mkdir("results/trim")
+maybdir("results/trim")
 fastq_regex = r"S-(.*)_L001_R[12]_001.fastq.gz"
 
 files = readdir("results/raw_reads")

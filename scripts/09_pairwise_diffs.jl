@@ -8,9 +8,9 @@ end
 
 println("Differences ranges on nt/aa level")
 for included in [true, false]
-    println("With H5N5 sample? ", included, '\n')
+    suffix = included ? "" : "OUT"
 
-    println("Nucleotide")
+    println("Nucleotide, with$(suffix) H5N5 sample")
     for segment in SEGMENTS
         (names, seqs) = open(FASTA.Reader, "results/consensus/set1/$segment.fna") do reader
             names, seqs = [], []
@@ -37,7 +37,7 @@ for included in [true, false]
     println("")
 
     # Also for AAs
-    println("Amino acid")
+    println("Nucleotide, with$(suffix) H5N5 sample")
     for gene in GENES
         seqs = []
         for basename in basenames

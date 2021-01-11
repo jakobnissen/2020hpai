@@ -9,6 +9,8 @@ for ngs in readdir("raw")
         # Skip these samples - they're too weak to be of any use.
         startswith(fastq, "S-12947") && continue
         startswith(fastq, "S-14320") && continue
-        run(`ln -s $(pwd())/raw/$ngs/$fastq results/raw_reads/$fastq`)
+        dest = "results/raw_reads/$fastq"
+        isfile(dest) && continue
+        run(`ln -s $(pwd())/raw/$ngs/$fastq $dest`)
     end
 end

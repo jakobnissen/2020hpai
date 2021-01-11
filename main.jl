@@ -13,6 +13,26 @@ using CodecZlib
 SEGMENTS = ["HA", "NA", "MP", "NP", "PB1", "PB2", "PA", "NS"]
 maybedir(path::AbstractString) = isdir(path) || mkdir(path)
 
+TREE_SEGMENTS = let
+    arr = copy(SEGMENTS)
+    deleteat!(arr, findfirst(isequal("NA"), arr))
+    append!(arr, ["N5", "N8"])
+end
+
+function getheader(record::FASTA.Record)
+    emptyid = isempty(record.identifier)
+    emptydesc = isempty(record.description)
+    if (emptyid & emptydesc)
+        return ""
+    elseif emptydesc
+        return String(record.data[record.identifier])
+    elseif emptyid
+        return String(record.data[record.description])
+    else
+        return String(record.data[first(record.identifier):last(record.description)])
+    end
+end
+
 ## Step 1: Move inputs to raw directory
 include("scripts/01_gather_inputs.jl")
 println("Completed step 1 - Move input")
@@ -81,3 +101,19 @@ println("Completed step 11 - Process second round of references")
 ## Step 12: Second round of phylogeny
 include("scripts/12_phylo2.jl")
 println("Completed step 12 - Second round of phylogeny")
+
+## Step 13: Third round of phylogeny
+include("scripts/13_process_set3.jl")
+println("Completed step 13 - Third round of phylogeny")
+
+## Step 14: Fourth round of phylogeny
+include("scripts/14_process_set4.jl")
+println("Completed step 14 - Fourth round of phylogeny")
+
+## Step 15: Fifth round of phylogeny
+include("scripts/15_process_set5.jl")
+println("Completed step 15 - Fifth round of phylogeny")
+
+## Step 16: Sixth round of phylogeny
+include("scripts/16_process_set6.jl")
+println("Completed step 16 - Sixth round of phylogeny")

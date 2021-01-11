@@ -68,7 +68,7 @@ maybedir("results/translated/set1")
 
 refseqs = Dict()
 for segment in SEGMENTS
-    open("ref/relative.fna") do file
+    open("ref/relative.fna.gz") do file
         reader = FASTA.Reader(GzipDecompressorStream(file))
         for record in reader
             refseqs[FASTA.identifier(record)] = FASTA.sequence(LongDNASeq, record)
@@ -78,7 +78,7 @@ end
 
 for segment in SEGMENTS
     for basename in basenames
-        record = open(FASTA.Reader, "results/consensus/set1/$(basename)_$(segment).fna") do reader
+        record = open(FASTA.Reader, "results/consensus/consensus/$(basename)_$(segment).fna") do reader
             iterate(reader)[1]
         end
         seq = FASTA.sequence(LongDNASeq, record)
@@ -118,6 +118,15 @@ for segment in SEGMENTS
                     write(writer, newrecord)
                 end
             end
+        end
+    end
+end
+
+for gene in GENES
+    open(FASTA.Writer, "results/translated/set1/$gene.faa") do writer
+        for basename in basenames
+            record, _ = open(iterate, FASTA.Reader, "results/translated/set1/$(basename)_$gene.faa")
+            write(writer, record)
         end
     end
 end

@@ -51,7 +51,7 @@ end
 
 maybedir("results/phylo/set3")
 
-# Add set1 first
+# Add set2 first
 bysegment = Dict(s => FASTA.Record[] for s in TREE_SEGMENTS)
 for segment in TREE_SEGMENTS
     maybedir("results/phylo/set2/$segment")

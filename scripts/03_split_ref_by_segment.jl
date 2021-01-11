@@ -26,7 +26,13 @@ bysegment = open("ref/set1/set1.fna.gz") do file
     bysegment = Dict()
     for record in reader
         identifier, segment, htype, ntype = extract_header_data(record)
-        newname = "$identifier(H$(htype)N$(ntype))"
+        newidentifier = replace(identifier, " "=>"_")
+        suffix = "(H$(htype)N$(ntype))"
+        newname = if endswith(identifier, suffix)
+            newidentifier
+        else
+            newidentifier * suffix
+        end
         seq = extract_sequence_data(record)
         newrecord = FASTA.Record(newname, seq)
         push!(get!(bysegment, segment, []), newrecord)

@@ -16,7 +16,7 @@ function getheader(record::FASTA.Record)
     String(record.data[ind])
 end
 
-## Add set3
+## Add set4
 bysegment = Dict(s => FASTA.Record[] for s in TREE_SEGMENTS)
 for segment in TREE_SEGMENTS
     #maybedir("results/phylo/set3/$segment")
@@ -77,4 +77,16 @@ Threads.@threads for segment in TREE_SEGMENTS
     stdout = "results/log/phylo/set4/$segment.log"
     pipe = pipeline(`iqtree -safe -s $alnpath -pre $iqpath -nt 2 -m HKY+G2 -nm 2500 -bb 1000`, stdout=stdout)
     run(pipe)
+end
+
+###
+segmnts = Dict()
+for segment in SEGMENTS
+    segmnts[segment] = []
+    for basename in basenames
+        open(FASTA.Reader, "results/consensus/set1/$(basename)_$(segment).fna") do reader
+            rec, _ = iterate(reader)
+            push!(segmnts[segment], (getheader(rec), FASTA.sequence(LongDNASeq, rec)))
+        end
+    end
 end
